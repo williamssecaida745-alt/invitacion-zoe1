@@ -8,65 +8,100 @@ const musica = document.getElementById("musica");
 const controlMusica = document.getElementById("controlMusica");
 const confirmar = document.getElementById("confirmar");
 
-// Número de WhatsApp con código de Guatemala (502).
-// Conserva aquí el número que ya tenías configurado.
+// Número de WhatsApp con código de Guatemala.
 const numeroWhatsApp = "50235804695";
 
-// Fecha del cumpleaños: 25 de octubre de 2026, a las 2:00 p. m.
+// Cumpleaños: 25 de octubre de 2026, a las 2:00 p. m.
 const fechaEvento = new Date(2026, 9, 25, 14, 0, 0);
 
 let temporizador = null;
 
-// Abrir la invitación
-botonAbrir.addEventListener("click", async () => {
-  portada.classList.add("oculta");
-  invitacion.classList.add("visible");
+// Detectar si la persona prefiere menos animaciones.
+const movimientoReducido = window.matchMedia(
+  "(prefers-reduced-motion: reduce)"
+).matches;
 
-  controlMusica.hidden = false;
-  actualizarContador();
+// ==========================================
+// 1. ABRIR LA INVITACIÓN
+// ==========================================
 
-  if (temporizador === null) {
-    temporizador = setInterval(actualizarContador, 1000);
-  }
+if (botonAbrir && portada && invitacion) {
+  botonAbrir.addEventListener("click", async () => {
+    portada.classList.add("oculta");
+    invitacion.classList.add("visible");
 
-  try {
-    await musica.play();
-    controlMusica.textContent = "♫ Pausar música";
-  } catch (error) {
-    controlMusica.textContent = "♫ Activar música";
-  }
-});
-
-// Reproducir o pausar la música
-controlMusica.addEventListener("click", async () => {
-  if (musica.paused) {
-    try {
-      await musica.play();
-      controlMusica.textContent = "♫ Pausar música";
-    } catch (error) {
-      alert(
-        "No se pudo reproducir la música. " +
-        "Comprueba que musica.mp3 esté en el repositorio."
-      );
+    if (controlMusica) {
+      controlMusica.hidden = false;
     }
-  } else {
-    musica.pause();
-    controlMusica.textContent = "♫ Activar música";
-  }
-});
 
-// Cuenta regresiva
+    actualizarContador();
+
+    if (temporizador === null) {
+      temporizador = setInterval(actualizarContador, 1000);
+    }
+
+    // Intentar reproducir música después de abrir.
+    if (musica && controlMusica) {
+      try {
+        await musica.play();
+        controlMusica.textContent = "♫ Pausar música";
+      } catch (error) {
+        controlMusica.textContent = "♫ Activar música";
+      }
+    }
+  });
+}
+
+// ==========================================
+// 2. CONTROL DE MÚSICA
+// ==========================================
+
+if (controlMusica && musica) {
+  controlMusica.addEventListener("click", async () => {
+    if (musica.paused) {
+      try {
+        await musica.play();
+        controlMusica.textContent = "♫ Pausar música";
+      } catch (error) {
+        alert(
+          "No se pudo reproducir la música. " +
+          "Comprueba que musica.mp3 esté en el repositorio."
+        );
+      }
+    } else {
+      musica.pause();
+      controlMusica.textContent = "♫ Activar música";
+    }
+  });
+}
+
+// ==========================================
+// 3. CUENTA REGRESIVA
+// ==========================================
+
 function actualizarContador() {
   const diferencia = fechaEvento.getTime() - Date.now();
 
+  const ids = ["dias", "horas", "minutos", "segundos"];
+
+  // Si ya pasó la fecha del evento.
   if (diferencia <= 0) {
-    ["dias", "horas", "minutos", "segundos"].forEach(id => {
-      document.getElementById(id).textContent = "00";
+    ids.forEach((id) => {
+      const elemento = document.getElementById(id);
+      if (elemento) elemento.textContent = "00";
     });
 
     if (temporizador !== null) {
       clearInterval(temporizador);
       temporizador = null;
+    }
+
+    const titulo = document.querySelector(
+      "#detalles h2"
+    );
+
+    if (titulo) {
+      titulo.textContent = "¡Hoy celebramos a Zoé! 🎂";
     }
 
     return;
@@ -80,35 +115,49 @@ function actualizarContador() {
   };
 
   Object.entries(valores).forEach(([id, valor]) => {
-    document.getElementById(id).textContent =
-      String(valor).padStart(2, "0");
+    const elemento = document.getElementById(id);
+
+    if (elemento) {
+      elemento.textContent = String(valor).padStart(2, "0");
+    }
   });
 }
 
-// Confirmación por WhatsApp
-const mensajeWhatsApp =
-  "¡Hola! Confirmo mi asistencia al cumpleaños de Zoé " +
-  "el domingo 25 de octubre de 2026 a las 2:00 p. m. 💙🎀";
+// ==========================================
+// 4. CONFIRMACIÓN POR WHATSAPP
+// ==========================================
 
-if (/^502\d{8}$/.test(numeroWhatsApp)) {
-  confirmar.href =
-    "https://wa.me/" +
-    numeroWhatsApp +
-    "?text=" +
-    encodeURIComponent(mensajeWhatsApp);
+if (confirmar) {
+  const mensajeWhatsApp =
+    "¡Hola! Confirmo mi asistencia al cumpleaños de Zoé " +
+    "el domingo 25 de octubre de 2026 a las 2:00 p. m. 💙🎀";
 
-  confirmar.target = "_blank";
-  confirmar.rel = "noopener noreferrer";
-} else {
-  confirmar.addEventListener("click", evento => {
-    evento.preventDefault();
-    alert("Revisa el número de WhatsApp configurado en script.js.");
-  });
+  if (/^502\d{8}$/.test(numeroWhatsApp)) {
+    confirmar.href =
+      "https://wa.me/" +
+      numeroWhatsApp +
+      "?text=" +
+      encodeURIComponent(mensajeWhatsApp);
+
+    confirmar.target = "_blank";
+    confirmar.rel = "noopener noreferrer";
+  } else {
+    confirmar.addEventListener("click", (evento) => {
+      evento.preventDefault();
+      alert(
+        "Revisa el número de WhatsApp configurado en script.js."
+      );
+    });
+  }
 }
 
+// ==========================================
+// 5. CORAZONES, ESTRELLAS Y BURBUJAS FLOTANTES
+// ==========================================
 
-/* 💖 Corazones, estrellas y burbujas flotantes */
 (() => {
+  if (movimientoReducido) return;
+
   const capa = document.createElement("div");
   capa.className = "efectos-flotantes";
   capa.setAttribute("aria-hidden", "true");
@@ -123,7 +172,6 @@ if (/^502\d{8}$/.test(numeroWhatsApp)) {
   ];
 
   function crearParticula() {
-    // Evita acumular demasiadas partículas
     if (capa.childElementCount >= 18) return;
 
     const tipo = tipos[
@@ -134,9 +182,7 @@ if (/^502\d{8}$/.test(numeroWhatsApp)) {
     particula.className =
       "particula-magica " + tipo.clase;
 
-    if (tipo.simbolo) {
-      particula.textContent = tipo.simbolo;
-    }
+    particula.textContent = tipo.simbolo;
 
     const tamano = tipo.clase === "burbuja"
       ? 10 + Math.random() * 20
@@ -161,94 +207,103 @@ if (/^502\d{8}$/.test(numeroWhatsApp)) {
 
     capa.appendChild(particula);
 
-    setTimeout(() => {
+    window.setTimeout(() => {
       particula.remove();
     }, duracion * 1000 + 200);
   }
 
-  // Crear partículas poco a poco
   crearParticula();
-  setInterval(crearParticula, 750);
+  window.setInterval(crearParticula, 750);
 })();
 
-/* ✨ EFECTOS ADICIONALES PARA LA INVITACIÓN DE ZOÉ */
-(() => {
-  // Evita duplicar los efectos si el bloque se ejecuta otra vez.
-  if (window.efectosMagicosZoeInstalados) return;
-  window.efectosMagicosZoeInstalados = true;
+// ==========================================
+// 6. DESTELLOS MÁGICOS AL ABRIR
+// ==========================================
 
-  // 1. Destellos alrededor del botón que abre la invitación.
-  // El botón deberá tener la clase "boton-abrir-magico".
-  document.addEventListener("click", (evento) => {
-    const boton = evento.target.closest(".boton-abrir-magico");
-    if (!boton) return;
+document.addEventListener("click", (evento) => {
+  const boton = evento.target.closest("#abrirInvitacion");
 
-    const rect = boton.getBoundingClientRect();
-    const centroX = rect.left + rect.width / 2;
-    const centroY = rect.top + rect.height / 2;
-    const simbolos = ["✦", "✧", "✨", "★", "♡"];
+  if (!boton || movimientoReducido) return;
 
-    for (let i = 0; i < 18; i++) {
-      const destello = document.createElement("span");
-      destello.className = "destello-zoe";
-      destello.textContent =
-        simbolos[Math.floor(Math.random() * simbolos.length)];
+  const rect = boton.getBoundingClientRect();
+  const centroX = rect.left + rect.width / 2;
+  const centroY = rect.top + rect.height / 2;
 
-      const angulo = Math.random() * Math.PI * 2;
-      const distancia = 25 + Math.random() * 100;
+  const simbolos = ["✦", "✧", "✨", "★", "♡"];
 
-      destello.style.left =
-        (centroX + Math.cos(angulo) * distancia) + "px";
-      destello.style.top =
-        (centroY + Math.sin(angulo) * distancia) + "px";
-      destello.style.setProperty(
-        "--brillo-tamano",
-        (14 + Math.random() * 18) + "px"
-      );
+  for (let i = 0; i < 20; i++) {
+    const destello = document.createElement("span");
 
-      document.body.appendChild(destello);
-      setTimeout(() => destello.remove(), 1000);
-    }
-  });
+    destello.className = "destello-zoe";
+    destello.textContent =
+      simbolos[Math.floor(Math.random() * simbolos.length)];
 
-  // 2. Confeti cuando se pulsa el enlace de WhatsApp.
-  // No bloquea ni reemplaza el enlace que ya tienes.
-  document.addEventListener("click", (evento) => {
-    const enlace = evento.target.closest("a[href]");
-    if (!enlace) return;
+    const angulo = Math.random() * Math.PI * 2;
+    const distancia = 20 + Math.random() * 110;
 
-    const destino = enlace.getAttribute("href") || "";
-    if (!/wa\.me|whatsapp\.com/i.test(destino)) return;
+    destello.style.left =
+      centroX + Math.cos(angulo) * distancia + "px";
 
-    const colores = [
-      "#ff86bd",
-      "#8edbff",
-      "#ffe17a",
-      "#c9a5ff",
-      "#a8edc2",
-      "#ffffff"
-    ];
+    destello.style.top =
+      centroY + Math.sin(angulo) * distancia + "px";
 
-    for (let i = 0; i < 65; i++) {
-      const pieza = document.createElement("span");
-      pieza.className = "confeti-zoe";
+    destello.style.setProperty(
+      "--brillo-tamano",
+      14 + Math.random() * 18 + "px"
+    );
 
-      pieza.style.setProperty(
-        "--confeti-x",
-        Math.random() * 100 + "vw"
-      );
-      pieza.style.setProperty(
-        "--confeti-color",
-        colores[Math.floor(Math.random() * colores.length)]
-      );
-      pieza.style.setProperty(
-        "--confeti-tiempo",
-        (1.5 + Math.random() * 2) + "s"
-      );
+    document.body.appendChild(destello);
 
-      document.body.appendChild(pieza);
-      setTimeout(() => pieza.remove(), 3700);
-    }
-  });
-})();
+    window.setTimeout(() => {
+      destello.remove();
+    }, 1000);
+  }
+});
+
+// ==========================================
+// 7. CONFETI AL CONFIRMAR ASISTENCIA
+// ==========================================
+
+document.addEventListener("click", (evento) => {
+  const enlace = evento.target.closest("#confirmar");
+
+  if (!enlace || movimientoReducido) return;
+
+  const colores = [
+    "#ff86bd",
+    "#8edbff",
+    "#ffe17a",
+    "#c9a5ff",
+    "#a8edc2",
+    "#ffffff"
+  ];
+
+  for (let i = 0; i < 60; i++) {
+    const pieza = document.createElement("span");
+
+    pieza.className = "confeti-zoe";
+
+    pieza.style.setProperty(
+      "--confeti-x",
+      Math.random() * 100 + "vw"
+    );
+
+    pieza.style.setProperty(
+      "--confeti-color",
+      colores[Math.floor(Math.random() * colores.length)]
+    );
+
+    pieza.style.setProperty(
+      "--confeti-tiempo",
+      1.5 + Math.random() * 1.5 + "s"
+    );
+
+    document.body.appendChild(pieza);
+
+    window.setTimeout(() => {
+      pieza.remove();
+    }, 3200);
+  }
+});
+
 
