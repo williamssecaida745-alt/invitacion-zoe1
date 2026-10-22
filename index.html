@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#dceaff">
+  <title>¡Zoé cumple 6 añitos!</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+  <div class="portada" id="portada">
+    <div class="tarjeta-portada">
+      <p class="etiqueta">UNA INVITACIÓN ESPECIAL</p>
+      <h1>¡Zoé cumple<br><span>6 añitos!</span></h1>
+      <p>Un día mágico nos espera...</p>
+      <div class="decoracion">💙 🩷 💜</div>
+      <button id="abrirInvitacion">Abrir invitación ♡</button>
+    </div>
+  </div>
+
+  <main class="invitacion" id="invitacion">
+    <section class="hero">
+      <p class="etiqueta">¡ESTÁS INVITADO!</p>
+      <h1>¡Zoé cumple<br><span>6 añitos!</span></h1>
+
+      <p>Un día lleno de magia, amor y diversión.</p>
+
+      <div class="personajes">
+        <img src="stitch-angel-zoe.png"
+             alt="Stitch y Angel celebrando el cumpleaños de Zoé">
+      </div>
+
+      <div class="fecha">
+        <p>DOMINGO</p>
+        <strong>25</strong>
+        <p>OCTUBRE · 2026</p>
+      </div>
+
+      <a href="#detalles" class="boton">Ver invitación ↓</a>
+    </section>
+
+    <section class="seccion">
+      <div class="emoji">🌺</div>
+      <h2>¡Ohana significa familia!</h2>
+      <p>
+        Y familia significa que nadie se queda atrás.
+        Queremos compartir contigo un día muy especial.
+      </p>
+    </section>
+
+    <section class="seccion" id="detalles">
+      <h2>¡Cuenta regresiva!</h2>
+
+      <div class="contador">
+        <div><strong id="dias">00</strong><span>Días</span></div>
+        <div><strong id="horas">00</strong><span>Horas</span></div>
+        <div><strong id="minutos">00</strong><span>Minutos</span></div>
+        <div><strong id="segundos">00</strong><span>Segundos</span></div>
+      </div>
+
+      <div class="detalle">
+        <span>📅</span>
+        <div>
+          <h3>Fecha</h3>
+          <p>Domingo 25 de octubre de 2026</p>
+        </div>
+      </div>
+
+      <div class="detalle">
+        <span>🕑</span>
+        <div>
+          <h3>Hora</h3>
+          <p>2:00 de la tarde</p>
+        </div>
+      </div>
+
+      <div class="detalle">
+        <span>📍</span>
+        <div>
+          <h3>Lugar</h3>
+          <p>Salón Comunal Casa Blanca</p>
+          <a class="boton"
+             href="https://www.google.com/maps/search/?api=1&query=Salon+Comunal+Casa+Blanca+Guatemala"
+             target="_blank" rel="noopener noreferrer">
+            Cómo llegar
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion">
+      <div class="emoji">💌</div>
+      <h2>¿Nos acompañas?</h2>
+      <p>Confirma tu asistencia por WhatsApp.</p>
+
+      <a class="boton whatsapp" id="confirmar" href="#">
+        Confirmar asistencia ♡
+      </a>
+    </section>
+
+    <footer>
+      <p>Hecho con mucho amor para Zoé 💙🩷</p>
+      <p>¡Ohana por siempre! 🌺</p>
+    </footer>
+  </main>
+
+  <audio id="musica" src="musica.mp3" loop></audio>
+
+  <button id="controlMusica" class="control-musica" hidden>
+    ♫ Activar música
+  </button>
+
+</body>
+</html>
