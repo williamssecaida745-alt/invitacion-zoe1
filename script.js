@@ -171,3 +171,84 @@ if (/^502\d{8}$/.test(numeroWhatsApp)) {
   setInterval(crearParticula, 750);
 })();
 
+/* ✨ EFECTOS ADICIONALES PARA LA INVITACIÓN DE ZOÉ */
+(() => {
+  // Evita duplicar los efectos si el bloque se ejecuta otra vez.
+  if (window.efectosMagicosZoeInstalados) return;
+  window.efectosMagicosZoeInstalados = true;
+
+  // 1. Destellos alrededor del botón que abre la invitación.
+  // El botón deberá tener la clase "boton-abrir-magico".
+  document.addEventListener("click", (evento) => {
+    const boton = evento.target.closest(".boton-abrir-magico");
+    if (!boton) return;
+
+    const rect = boton.getBoundingClientRect();
+    const centroX = rect.left + rect.width / 2;
+    const centroY = rect.top + rect.height / 2;
+    const simbolos = ["✦", "✧", "✨", "★", "♡"];
+
+    for (let i = 0; i < 18; i++) {
+      const destello = document.createElement("span");
+      destello.className = "destello-zoe";
+      destello.textContent =
+        simbolos[Math.floor(Math.random() * simbolos.length)];
+
+      const angulo = Math.random() * Math.PI * 2;
+      const distancia = 25 + Math.random() * 100;
+
+      destello.style.left =
+        (centroX + Math.cos(angulo) * distancia) + "px";
+      destello.style.top =
+        (centroY + Math.sin(angulo) * distancia) + "px";
+      destello.style.setProperty(
+        "--brillo-tamano",
+        (14 + Math.random() * 18) + "px"
+      );
+
+      document.body.appendChild(destello);
+      setTimeout(() => destello.remove(), 1000);
+    }
+  });
+
+  // 2. Confeti cuando se pulsa el enlace de WhatsApp.
+  // No bloquea ni reemplaza el enlace que ya tienes.
+  document.addEventListener("click", (evento) => {
+    const enlace = evento.target.closest("a[href]");
+    if (!enlace) return;
+
+    const destino = enlace.getAttribute("href") || "";
+    if (!/wa\.me|whatsapp\.com/i.test(destino)) return;
+
+    const colores = [
+      "#ff86bd",
+      "#8edbff",
+      "#ffe17a",
+      "#c9a5ff",
+      "#a8edc2",
+      "#ffffff"
+    ];
+
+    for (let i = 0; i < 65; i++) {
+      const pieza = document.createElement("span");
+      pieza.className = "confeti-zoe";
+
+      pieza.style.setProperty(
+        "--confeti-x",
+        Math.random() * 100 + "vw"
+      );
+      pieza.style.setProperty(
+        "--confeti-color",
+        colores[Math.floor(Math.random() * colores.length)]
+      );
+      pieza.style.setProperty(
+        "--confeti-tiempo",
+        (1.5 + Math.random() * 2) + "s"
+      );
+
+      document.body.appendChild(pieza);
+      setTimeout(() => pieza.remove(), 3700);
+    }
+  });
+})();
+
