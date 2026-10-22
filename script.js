@@ -106,3 +106,74 @@ if (/^502\d{8}$/.test(numeroWhatsApp)) {
   });
 }
 
+
+/* 💖 Corazones, estrellas y burbujas flotantes */
+(() => {
+  if (window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches) {
+    return;
+  }
+
+  const capa = document.createElement("div");
+  capa.className = "efectos-flotantes";
+  capa.setAttribute("aria-hidden", "true");
+  document.body.appendChild(capa);
+
+  const tipos = [
+    { clase: "corazon", simbolo: "♥" },
+    { clase: "corazon", simbolo: "♡" },
+    { clase: "estrella", simbolo: "★" },
+    { clase: "estrella", simbolo: "✦" },
+    { clase: "burbuja", simbolo: "" }
+  ];
+
+  function crearParticula() {
+    // Evita acumular demasiadas partículas
+    if (capa.childElementCount >= 18) return;
+
+    const tipo = tipos[
+      Math.floor(Math.random() * tipos.length)
+    ];
+
+    const particula = document.createElement("span");
+    particula.className =
+      "particula-magica " + tipo.clase;
+
+    if (tipo.simbolo) {
+      particula.textContent = tipo.simbolo;
+    }
+
+    const tamano = tipo.clase === "burbuja"
+      ? 10 + Math.random() * 20
+      : 14 + Math.random() * 18;
+
+    const duracion = 7 + Math.random() * 6;
+
+    particula.style.setProperty(
+      "--posicion",
+      Math.random() * 96 + "%"
+    );
+
+    particula.style.setProperty(
+      "--tamano",
+      tamano + "px"
+    );
+
+    particula.style.setProperty(
+      "--duracion",
+      duracion + "s"
+    );
+
+    capa.appendChild(particula);
+
+    setTimeout(() => {
+      particula.remove();
+    }, duracion * 1000 + 200);
+  }
+
+  // Crear partículas poco a poco
+  crearParticula();
+  setInterval(crearParticula, 750);
+})();
+
