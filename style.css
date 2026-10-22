@@ -340,12 +340,26 @@ footer {
   }
 }
 
-img.imagen-personajes {
-  display: block !important;
-  width: 180px !important;
-  max-width: 70% !important;
-  height: auto !important;
-  max-height: 180px !important;
-  object-fit: contain;
+
+/* Corrección definitiva del tamaño de Stitch y Angel */
+.hero .personajes {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  max-width: 100% !important;
   margin: 15px auto !important;
+  overflow: hidden !important;
 }
+
+.hero .personajes img.imagen-personajes {
+  display: block !important;
+  width: 120px !important;
+  min-width: 0 !important;
+  max-width: 120px !important;
+  height: auto !important;
+  max-height: 120px !important;
+  object-fit: contain !important;
+  margin: 0 auto !important;
+}
+
