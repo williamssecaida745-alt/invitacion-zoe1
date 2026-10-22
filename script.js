@@ -109,12 +109,6 @@ if (/^502\d{8}$/.test(numeroWhatsApp)) {
 
 /* 💖 Corazones, estrellas y burbujas flotantes */
 (() => {
-  if (window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches) {
-    return;
-  }
-
   const capa = document.createElement("div");
   capa.className = "efectos-flotantes";
   capa.setAttribute("aria-hidden", "true");
