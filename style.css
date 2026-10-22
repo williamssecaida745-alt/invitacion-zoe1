@@ -339,3 +339,13 @@ footer {
     scroll-behavior: auto !important;
   }
 }
+
+img.imagen-personajes {
+  display: block !important;
+  width: 180px !important;
+  max-width: 70% !important;
+  height: auto !important;
+  max-height: 180px !important;
+  object-fit: contain;
+  margin: 15px auto !important;
+}
